@@ -34,14 +34,20 @@ if (isCordova) {
 }
 
 function initEditor() {
-  $htmlEditor.summernote({
+  $htmlEditor
+  .on('summernote.init', function() {
+    console.log('summernote initialize!');
+  })
+  .on('summernote.change', function() {
+    console.log('changed content');
+  })
+  .on('summernote.keyup', function(event) {
+    contentVersion++;
+  })
+  .summernote({
     focus: true,
     height: "100%",
-    toolbar: toolbar,
-    onkeyup: function() {
-      contentVersion++;
-      //            window.parent.postMessage('par1', '*');
-    }
+    toolbar: toolbar
   });
 }
 
