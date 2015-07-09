@@ -96,6 +96,7 @@ requirejs.config({
     pdfjs:                  'libs/pdfjs/build/pdf',
     webdavlib:              'web/webdavlib',
     jszip:                  'libs/jszip/jszip.min',
+    pouchdb:                'libs/pouchdb/pouchdb.min',
 
     tscore:                 'js/core.api',
     tssetting:              'js/settings.api',
