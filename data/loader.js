@@ -97,6 +97,7 @@ requirejs.config({
     webdavlib:              'web/webdavlib',
     jszip:                  'libs/jszip/jszip.min',
     pouchdb:                'libs/pouchdb/pouchdb.min',
+    'pouchdb-quick-search':   'libs/pouchdb/pouchdb.quick-search.min', 
 
     tscore:                 'js/core.api',
     tssetting:              'js/settings.api',
