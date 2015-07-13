@@ -360,6 +360,7 @@ define(function(require, exports, module) {
       //TODO: get folder name
       var metaFolderPath = TSCORE.currentPath + TSCORE.dirSeparator + ".ts";
       TSCORE.IO.getDirectoryMetaInformation(metaFolderPath);
+      TSPRO.createDirectoryIndex(directoryPath);
     }
     TSCORE.IO.listDirectory(directoryPath);
   }
