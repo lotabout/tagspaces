@@ -6,6 +6,7 @@ define(function(require, exports, module) {
   'use strict';
   console.log('Loading core.ui.js ...');
   var TSCORE = require('tscore');
+  var TSPRO = require('tspro');
   var fileContent;
   var fileType;
   var showWaitingDialog = function(message, title) {
@@ -510,7 +511,11 @@ define(function(require, exports, module) {
         // On enter fire the search
         if (e.keyCode === 13) {
           $('#clearFilterButton').addClass('filterOn');
-          TSCORE.PerspectiveManager.redrawCurrentPerspective();
+          
+          TSPRO.contentIndexSearch($(this).val()).then(function(result) {
+            console.log("Search result: " + JSON.stringify(result));
+          });
+          /*TSCORE.PerspectiveManager.redrawCurrentPerspective();*/
           $('#searchOptions').hide();
           $('#searchButton').focus();
         } else if (e.keyCode == 27) {
