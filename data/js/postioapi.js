@@ -7,6 +7,8 @@ define(function(require, exports, module) {
   // Activating browser specific exports modul
   console.log('Loading postioapi.js ...');
   var TSCORE = require('tscore');
+  var TSPRO = require('tspro');
+
   exports.createDirectoryIndex = function(directoryIndex) {
     console.log('Directory index created');
     TSCORE.PerspectiveManager.updateFileBrowserData(directoryIndex);
@@ -53,6 +55,9 @@ define(function(require, exports, module) {
       // File was renamed
       TSCORE.updateFileModel(TSCORE.fileList, oldFilePath, newFilePath);
       TSCORE.PerspectiveManager.updateFileUI(oldFilePath, newFilePath);
+    }
+    if(TSPRO.available){
+      TSPRO.contentIndexRemove(oldFilePath, newFilePath);
     }
     TSCORE.hideWaitingDialog(); //TSCORE.PerspectiveManager.clearSelectedFiles();
   };
@@ -112,6 +117,11 @@ define(function(require, exports, module) {
     if (filePath === TSCORE.FileOpener.getOpenedFilePath()) {
       TSCORE.FileOpener.closeFile(true);
     }
+
+    if(TSPRO.available){
+      TSPRO.contentIndexRemove(filePath);
+    }
+
     TSCORE.hideLoadingAnimation();
   };
 

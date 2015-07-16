@@ -516,7 +516,7 @@ define(function(require, exports, module) {
     }
   };
 
-  var getDirectoryMetaInformation = function(dirPath) {
+  var getDirectoryMetaInformation = function(dirPath, callback) {
     
     console.log("getDirectoryMetaInformation directory: " + dirPath);
     try {
@@ -543,6 +543,9 @@ define(function(require, exports, module) {
         }
         //TSPOSTIO.listDirectory(anotatedDirList);
         TSCORE.metaFileList = anotatedDirList;
+        if(callback) {
+          callback(anotatedDirList);
+        }
       });
     } catch (ex) {
       console.error("Listing directory " + dirPath + " failed " + ex);
