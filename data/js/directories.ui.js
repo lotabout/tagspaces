@@ -106,6 +106,10 @@ define(function(require, exports, module) {
     directoryHistory = [];
     navigateToDirectory(path);
     TSCORE.showLocationsPanel();
+    //TODO: 
+    if (TSPRO.available) {
+      TSPRO.createDirectoryIndex(path);
+    }
   }
 
   function loadFolderMetaData(path) {
@@ -360,9 +364,6 @@ define(function(require, exports, module) {
       //TODO: get folder name
       var metaFolderPath = TSCORE.currentPath + TSCORE.dirSeparator + ".ts";
       TSCORE.IO.getDirectoryMetaInformation(metaFolderPath);
-      if (TSPRO.available) {
-        TSPRO.createDirectoryIndex(directoryPath);
-      }
     }
     TSCORE.IO.listDirectory(directoryPath);
   }

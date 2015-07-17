@@ -59,7 +59,7 @@ define(function(require, exports, module) {
     tsDirectoriesUI.initLocations();
     tsFileOpener.initUI();
     tsPersManager.initPerspectives().then(function(result) {
-      console.log("initPerspectives: "+result);
+      console.log("initPerspectives: " + result);
     }).catch(function(err) { 
       alert("initPerspectives: " + err);
     });

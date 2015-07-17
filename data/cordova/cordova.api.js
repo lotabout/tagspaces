@@ -532,7 +532,7 @@ define(function(require, exports, module) {
     );
   };
 
-  var getDirectoryMetaInformation = function(dirPath) {
+  var getDirectoryMetaInformation = function(dirPath, callback) {
       
     console.log("getDirectoryMetaInformation directory: " + dirPath);
     dirPath = dirPath + "/"; // TODO make it platform independent
@@ -565,7 +565,10 @@ define(function(require, exports, module) {
                       "lmdt": entry.lastModifiedDate,
                       "path": entry.fullPath
                     });
-                    TSCORE.metaFileList = (anotatedDirList);
+                    TSCORE.metaFileList = anotatedDirList;
+                    if(callback) {
+                      callback(anotatedDirList);
+                    }
                   }, // jshint ignore:line
                   function(error) { // error get file system
                     console.log("listDirectory error: " + JSON.stringify(error));
