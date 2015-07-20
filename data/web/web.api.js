@@ -73,6 +73,75 @@ define(function(require, exports, module) {
     );
   }
 
+  var anotatedDirList = [];
+  var pendigCallbacks = 0;
+  function scandDirectory(dirPath, callback) {
+
+    console.log("scandDirectory: " + dirPath);
+
+    dirPath = encodeURI(dirPath + "/");
+    pendigCallbacks++;
+    davClient.propfind(
+      dirPath, //encodeURI(dirPath),
+      function(status, data) {
+        console.log("Dirlist Status:  " + status);
+        //console.log("Dirlist Content: "+JSON.stringify(data._responses));
+        
+          var dirList = data._responses,
+          fileName,
+          isDir,
+          filesize,
+          lmdt;
+       
+        for (var entry in dirList) {
+          var path = dirList[entry].href;
+
+          if (dirPath.toLowerCase() !== path.toLowerCase()) {
+            isDir = false;
+            filesize = undefined;
+            lmdt = undefined;
+            //console.log(dirList[entry]._namespaces["DAV:"]);
+            if (typeof dirList[entry]._namespaces["DAV:"].getcontentlength === 'undefined' ||
+              dirList[entry]._namespaces["DAV:"].getcontentlength._xmlvalue.length === 0
+            ) {
+              isDir = true;
+            } else {
+              filesize = dirList[entry]._namespaces["DAV:"].getcontentlength;
+              lmdt = data._responses[entry]._namespaces["DAV:"].getlastmodified._xmlvalue[0].data;
+            }
+            if(isDir) {
+              if(path + "/" !== dirPath) {
+                scandDirectory(path, callback);
+              } 
+            } else {
+              fileName = getNameForPath(path);
+                anotatedDirList.push({
+                "name": fileName,
+                "isFile": !isDir,
+                "size": filesize,
+                "lmdt": lmdt,
+                "path": decodeURI(path)
+              });
+            }
+  
+          }
+        }
+        pendigCallbacks--;
+        console.log("pendigCallbacks " + pendigCallbacks);
+        if(callback && pendigCallbacks ===0 ) {
+          callback(anotatedDirList);
+        }
+      },
+      1 //davClient.INFINITY
+    );
+  }
+  
+  function getDirectoryIndex(dirPath, callback) {
+    anotatedDirList = [];
+    pendigCallbacks = 0;
+    scandDirectory(dirPath, callback);
+  }
+
   function getNameForPath(path) {
     if (path.lastIndexOf("/") == path.length - 1) {
       path = path.substring(0, path.lastIndexOf("/"));
@@ -324,4 +393,5 @@ define(function(require, exports, module) {
   exports.checkNewVersion = checkNewVersion;
   exports.getFileProperties = getFileProperties;
   exports.getFileContent = getFileContent;
+  exports.getDirectoryIndex = getDirectoryIndex;
 });

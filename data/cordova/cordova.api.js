@@ -253,7 +253,7 @@ define(function(require, exports, module) {
   }
 
   // TODO recursively calling callback not really working        
-  function scanDirectory(entries) {
+  function scanDirectory(entries, callback) {
     var i;
     for (i = 0; i < entries.length; i++) {
       if (entries[i].isFile) {
@@ -269,7 +269,9 @@ define(function(require, exports, module) {
         var directoryReader = entries[i].createReader();
         pendingRecursions++;
         directoryReader.readEntries(
-          scanDirectory,
+          function(entry) {
+            scanDirectory(entry, callback);
+          },
           function(error) {
             console.log("Error reading dir entries: " + error.code);
           }); // jshint ignore:line
@@ -278,13 +280,17 @@ define(function(require, exports, module) {
     pendingRecursions--;
     console.log("Pending recursions: " + pendingRecursions);
     if (pendingRecursions <= 0) {
-      TSPOSTIO.createDirectoryIndex(anotatedDirListing);
+      if(callback) {
+        callback(anotatedDirListing); 
+      } else {
+        TSPOSTIO.createDirectoryIndex(anotatedDirListing);
+      }
     }
   }
 
   var anotatedDirListing;
   var pendingRecursions = 0;
-  var createDirectoryIndex = function(dirPath) {
+  var createDirectoryIndex = function(dirPath, callback) {
     dirPath = dirPath + "/"; // TODO make it platform independent
     dirPath = normalizePath(dirPath);
     console.log("Creating index for directory: " + dirPath);
@@ -300,7 +306,9 @@ define(function(require, exports, module) {
         // Get a list of all the entries in the directory
         pendingRecursions++;
         directoryReader.readEntries(
-          scanDirectory,
+          function(entry) {
+            scanDirectory(entry, callback);
+          },
           function(error) { // error get file system
             console.log("Dir List Error: " + error.code);
           }
@@ -1000,6 +1008,12 @@ define(function(require, exports, module) {
     console.log("Focusing window is not implemented yet.");
   };
 
+  var getDirectoryIndex = function(dirPath, callback) {
+    if(callback) {
+      createDirectoryIndex(dirPath, callback);
+    }
+  };
+
   exports.focusWindow = focusWindow;
   exports.createDirectory = createDirectory;
   exports.copyFile = copyFile;
@@ -1031,4 +1045,5 @@ define(function(require, exports, module) {
   exports.getFile = getFile;
   exports.getFileContent = getFileContent;
   exports.getDirectoryMetaInformation = getDirectoryMetaInformation;
+  exports.getDirectoryIndex = getDirectoryIndex;
 });

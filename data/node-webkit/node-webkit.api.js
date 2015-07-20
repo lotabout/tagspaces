@@ -707,6 +707,12 @@ define(function(require, exports, module) {
     xhr.send();
   }
 
+  var getDirectoryIndex = function(dirPath, callback) {
+    var directoryIndex = [];
+    directoryIndex = scanDirectory(dirPath, directoryIndex);
+    callback(directoryIndex);
+  };
+
   exports.createDirectory = createDirectory;
   exports.renameDirectory = renameDirectory;
   exports.renameFile = renameFile;
@@ -735,5 +741,5 @@ define(function(require, exports, module) {
   exports.getFile = getFile;
   exports.getFileContent = getFileContent;
   exports.getDirectoryMetaInformation = getDirectoryMetaInformation;
-  exports.scanDirectory = scanDirectory;
+  exports.getDirectoryIndex = getDirectoryIndex;
 });
