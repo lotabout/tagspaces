@@ -49,73 +49,59 @@ define(function(require, exports, module) {
     return (false);
   }
 
-  var dirIndex = [];
-  var pendingCallbacks = 0;
-  function scanDirectory(dirPath, callback) {
-    pendingCallbacks++;
-    $.ajax({
-      url: "file://"+dirPath,
-      type: 'GET'
-    })
-    .done(function(data) {
-      //console.log("Dir List "+data);
-      var folders = data.substring(data.indexOf(dataBegin)+dataBegin.length,data.lastIndexOf(dataEnd));
-      folders = folders.split(dataBegin).join("");
-      folders = folders.split(dataEnd);
-               
-      var name,
-          path,
-          isFile,
-          fileSize,
-          lastDateModified,
-          fileProp;
+  function scanDirectory(dirPath, index) {
+    /*        $.ajax({
+                url: "file://"+dirPath,
+                type: 'GET'
+            })
+            .done(function(data) {
+                //console.log("Dir List "+data);
+                var folders = data.substring(data.indexOf(dataBegin)+dataBegin.length,data.lastIndexOf(dataEnd));
+                folders = folders.split(dataBegin).join("");
+                folders = folders.split(dataEnd);
 
-      // sciping the first entry pointing to the parent directory
-      for (var i=1; i < folders.length; i++) {
-        // console.log("Dir Req "+folders[i]);
-        name = folders[i].substring(2,folders[i].indexOf('","'));
-        path = dirPath+TSCORE.dirSeparator+name;
-        isFile = (folders[i].indexOf(dataFile) > 1);
-        fileSize = 0;
-        lastDateModified = 0;
-        if(isFile) {
-          fileProp = folders[i].substring(folders[i].indexOf(dataFile)+dataFile.length+1,folders[i].length-1);
-          fileProp = fileProp.split('","');
-          fileSize = fileProp[0];
-          lastDateModified = fileProp[1];
-        }
-        dirIndex.push({
-          "name": name,
-          "isFile": isFile,
-          "size": fileSize,
-          "lmdt": lastDateModified,
-          "path": path
-        });
-          
-        if (!isFile) {
-          scanDirectory(path, callback);
-        }
-      }
+                var name,
+                    path,
+                    isFile,
+                    fileSize,
+                    lastDateModified,
+                    fileProp;
 
-      pendingCallbacks--;
-      if(pendingCallbacks === 0) {
-        callback(dirIndex);
-      }
-    })
-    .fail(function(data) {
-      //TSPOSTIO.errorOpeningPath(dirPath);
-      console.log("Error opening path "+data);
-    });
+                // sciping the first entry pointing to the parent directory
+                for (var i=1; i < folders.length; i++) {
+                    console.log("Dir Req "+folders[i]);
+                    name = folders[i].substring(2,folders[i].indexOf('","'));
+                    path = dirPath+TSCORE.dirSeparator+name;
+                    isFile = (folders[i].indexOf(dataFile) > 1);
+                    fileSize = 0;
+                    lastDateModified = 0;
+                    if(isFile) {
+                        fileProp = folders[i].substring(folders[i].indexOf(dataFile)+dataFile.length+1,folders[i].length-1);
+                        fileProp = fileProp.split('","');
+                        fileSize = fileProp[0];
+                        lastDateModified = fileProp[1];
+                    }
+                    index.push({
+                        "name": name,
+                        "isFile": isFile,
+                        "size": fileSize,
+                        "lmdt": lastDateModified,
+                        "path": path
+                    });
+                    if (!isFile) {
+                        scanDirectory(path, index);
+                    }
+                }
+                return index;
+            })
+            .fail(function(data) {
+                TSPOSTIO.errorOpeningPath(dirPath);
+                console.log("Error opening path "+data);
+            });*/
   }
 
   function generateDirectoryTree(dirPath) {
 
-  }
-
-  function getDirectoryIndex(dirPath, callback) {
-    dirIndex = [];
-    pendingCallbacks = 0;
-    scanDirectory(dirPath, callback);
   }
 
   var checkNewVersion = function() {
@@ -255,10 +241,10 @@ define(function(require, exports, module) {
   var createDirectoryIndex = function(dirPath) {
     console.log("Creating index for directory: " + dirPath);
     TSCORE.showLoadingAnimation();
-    getDirectoryIndex(dirPath, function(directoryIndex) {
-      console.log(JSON.stringify(directoryIndex));
-      TSPOSTIO.createDirectoryIndex(directoryIndex);
-    });
+    var directoryIndex = [];
+    directoryIndex = scanDirectory(dirPath, directoryIndex);
+    console.log(JSON.stringify(directoryIndex));
+    TSPOSTIO.createDirectoryIndex(directoryIndex);
   };
 
   var createDirectoryTree = function(dirPath) {
@@ -410,5 +396,4 @@ define(function(require, exports, module) {
   exports.saveSettings = saveSettings;
   exports.handleStartParameters = handleStartParameters;
   exports.getFileContent = getFileContent;
-  exports.getDirectoryIndex = getDirectoryIndex;
 });
