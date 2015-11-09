@@ -56,7 +56,7 @@ var isWin = navigator.appVersion.indexOf("Win")!==-1;
   }
 
   var PRO_JS = "pro/js/pro.api";
-  if(PRO.indexOf("@@PROVERS") == 0 || PRO == "false") { PRO_JS = 'js/pro'; }
+  //if(PRO.indexOf("@@PROVERS") == 0 || PRO == "false") { PRO_JS = 'js/pro'; }
 
   console.log("Loading Loader - Firefox: "+isFirefox+" | ChromeExt: "+isChrome+" | Node: "+isNode+" | Cordova: "+isCordova+" | Web: "+isWeb+" | isWin: "+isWin);
 
@@ -97,6 +97,7 @@ var isWin = navigator.appVersion.indexOf("Win")!==-1;
       rasterizehtml:          'libs/rasterizeHTML/rasterizeHTML.allinone',
       hopscotch:              'libs/hopscotch/js/hopscotch.min',
       noty:                   'libs/noty/jquery.noty.packaged.min',
+      xlsx:                   'libs/js-xlsx/xlsx',
 
       tscore:                 'js/core.api',
       tssetting:              'js/settings.api',
@@ -136,6 +137,10 @@ var isWin = navigator.appVersion.indexOf("Win")!==-1;
       'select2':                  { deps: ['jquery'] },
       'hammerjs':                 { deps: ['jquery'] },
       'mousetrapgb':              { deps: ['mousetrap'] },
+      'xlsx': {
+        deps: ['jszip'],
+        exports: 'XLSX' 
+      },
       'tscore':                   { deps: [
         'jquery',
         'jqueryui',
