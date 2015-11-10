@@ -98,7 +98,7 @@ var isWin = navigator.appVersion.indexOf("Win")!==-1;
       hopscotch:              'libs/hopscotch/js/hopscotch.min',
       noty:                   'libs/noty/jquery.noty.packaged.min',
       xlsx:                   'libs/js-xlsx/xlsx',
-
+      ods:                    'libs/js-xlsx/ods', 
       tscore:                 'js/core.api',
       tssetting:              'js/settings.api',
       tssettingsdefault:      'js/settings.default',
