@@ -94,7 +94,6 @@ var isWin = navigator.appVersion.indexOf("Win")!==-1;
       webdavlib:              'web/webdavlib',
       jszip:                  'libs/jszip/jszip.min',
       slideout:               'libs/slideoutjs/slideout.min',
-      rasterizehtml:          'libs/rasterizeHTML/rasterizeHTML.allinone',
       hopscotch:              'libs/hopscotch/js/hopscotch.min',
       noty:                   'libs/noty/jquery.noty.packaged.min',
       xlsx:                   'libs/js-xlsx/xlsx',
