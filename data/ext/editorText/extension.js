@@ -7,7 +7,7 @@ define(function(require, exports, module) {
 
   console.log("Loading editorText extension");
 
-  exports.id = "editorText"; // ID should be equal to the directory name where the ext. is located   
+  exports.id = "editorText"; // ID should be equal to the directory name where the ext. is located
   exports.title = "Text Editor based on codemirror";
   exports.type = "editor";
   exports.supportedFileTypes = [
@@ -41,10 +41,13 @@ define(function(require, exports, module) {
 
     require([
       extensionDirectory + '/codemirror/lib/codemirror',
-      extensionDirectory + "/codemirror/mode/" + mode + "/" + mode, 
+      extensionDirectory + "/codemirror/mode/" + mode + "/" + mode,
       'css!' + extensionDirectory + '/codemirror/lib/codemirror.css',
-      'css!' + extensionDirectory + '/extension.css'
+      'css!' + extensionDirectory + '/codemirror/addon/dialog/dialog.css',
+      'css!' + extensionDirectory + '/extension.css',
+      extensionDirectory + '/codemirror/keymap/vim.js'
     ], function(CodeMirror) {
+
       var cursorBlinkRate = isViewerMode ? -1 : 530; // disabling the blinking cursor in readonly mode
       var lineNumbers = !isViewerMode;
       //var saveKB = convertMouseTrapToCodeMirrorKeyBindings(TSCORE.Config.getSaveDocumentKeyBinding());
@@ -69,6 +72,7 @@ define(function(require, exports, module) {
         cursorBlinkRate: cursorBlinkRate,
         readOnly: isViewerMode ? "nocursor" : isViewerMode,
         autofocus: true,
+        vimMode: true,
         //theme: "lesser-dark",
         //extraKeys: keys // workarrounded with bindGlobal plugin for mousetrap
       });
